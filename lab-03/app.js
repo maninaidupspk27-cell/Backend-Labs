@@ -1,14 +1,36 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
-const sqlite3 = require("sqlite3");
 const { open } = require("sqlite");
+
+let sqlite3 = null;
+let sqliteLoadError = null;
+try {
+  sqlite3 = require("sqlite3");
+} catch (err) {
+  sqliteLoadError = err;
+  console.error("Warning: Failed to load sqlite3 native module:", err.message);
+}
 
 const app = express();
 app.use(express.json());
 
 const isVercel = process.env.VERCEL === "1" || !!process.env.VERCEL;
-const originalDbPath = path.join(__dirname, "goodreads.db");
+
+// Locate goodreads.db across different execution directories
+const findOriginalDb = () => {
+  const candidatePaths = [
+    path.join(__dirname, "goodreads.db"),
+    path.join(process.cwd(), "lab-03", "goodreads.db"),
+    path.join(process.cwd(), "goodreads.db"),
+  ];
+  for (const candidate of candidatePaths) {
+    if (fs.existsSync(candidate)) return candidate;
+  }
+  return path.join(__dirname, "goodreads.db");
+};
+
+const originalDbPath = findOriginalDb();
 const dbPath = isVercel ? path.join("/tmp", "goodreads.db") : originalDbPath;
 
 let db = null;
@@ -16,14 +38,11 @@ let dbPromise = null;
 
 // ---------- Helpers ----------
 
-// ORDER BY column and direction cannot use "?" placeholders,
-// so we only allow values from these safe lists.
 const ALLOWED_ORDER_BY = ["id", "title", "author", "price", "pages"];
 const ALLOWED_ORDER = ["ASC", "DESC"];
 
 const isBlank = (value) => typeof value !== "string" || value.trim() === "";
 
-// Returns an error message if the body is invalid, otherwise null
 const validateBook = (body) => {
   const { title, author, price, pages } = body || {};
 
@@ -42,19 +61,25 @@ const validateBook = (body) => {
   return null;
 };
 
-// Returns the id as a number, or null if it is not a positive whole number
 const parseId = (value) => {
   const id = Number(value);
   return Number.isInteger(id) && id > 0 ? id : null;
 };
 
-// ---------- Database Initializer (Supports Local, Render, and Vercel Serverless) ----------
+// ---------- Database Initializer (Supports Local, Render, and Vercel) ----------
 
 const getDB = async () => {
+  if (sqliteLoadError || !sqlite3) {
+    throw new Error(
+      "SQLite3 native binary failed to load in this serverless environment: " +
+        (sqliteLoadError ? sqliteLoadError.message : "module not available")
+    );
+  }
+
   if (!dbPromise) {
     dbPromise = (async () => {
-      // In Vercel serverless environments, the project folder is read-only.
-      // Copy the database to /tmp so SQLite write operations succeed.
+      // In Vercel serverless environments, the filesystem is read-only.
+      // Copy the database file to /tmp so write operations succeed.
       if (isVercel && fs.existsSync(originalDbPath) && !fs.existsSync(dbPath)) {
         try {
           fs.copyFileSync(originalDbPath, dbPath);
@@ -104,13 +129,16 @@ const getDB = async () => {
   return dbPromise;
 };
 
-// Ensure database is ready before each request
+// Middleware: ensure database is ready before handling requests
 app.use(async (request, response, next) => {
   try {
     await getDB();
     next();
   } catch (error) {
-    response.status(500).json({ message: "Database connection failed: " + error.message });
+    response.status(500).json({
+      message: "Database initialization failed: " + error.message,
+      note: "If running on Vercel, serverless environments may block C++ SQLite binaries. Deploying to Render (or using Render's blueprint) runs full persistent Node/SQLite.",
+    });
   }
 });
 
@@ -134,7 +162,6 @@ app.get("/", (request, response) => {
 });
 
 // GET all books: search, filter, sort, paginate
-// Example: /books/?search_q=the&min_price=300&max_price=450&order_by=price&order=DESC&limit=5&offset=0
 app.get("/books/", async (request, response) => {
   try {
     const {
@@ -184,8 +211,6 @@ app.get("/books/", async (request, response) => {
         .json({ message: "min_price cannot be greater than max_price" });
     }
 
-    // orderBy and orderDir are safe because they passed the allow-lists above.
-    // Everything else goes through "?" placeholders.
     const query = `
       SELECT * FROM book
       WHERE title LIKE ?
