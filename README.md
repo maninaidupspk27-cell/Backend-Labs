@@ -15,9 +15,9 @@
 
 ## Course Lab Index
 
-| Lab Folder | Topic / Module | Status | Description |
-| --- | --- | --- | --- |
-| [`lab-03/`](./lab-03/) | REST API, Query Parameters, Validation, Debugging | Completed | Noun-based REST API, search (`search_q`), sorting (`order_by`, `order`), pagination (`limit`, `offset`), price-range filter (`min_price`, `max_price`), validation, status codes, and debugging |
+| Lab Folder | Topic / Module | Status | Live Deployment | Description |
+| --- | --- | --- | --- | --- |
+| [`lab-03/`](./lab-03/) | REST API, Query Parameters, Validation, Debugging | Completed | [Live on Render](https://backend-labs-lab-03.onrender.com/books/) | Noun-based REST API, search (`search_q`), sorting (`order_by`, `order`), pagination (`limit`, `offset`), price-range filter (`min_price`, `max_price`), validation, status codes, and debugging |
 
 *(Note: Lab 1 and Lab 2 were completed in their respective standalone repositories. Labs from Lab 3 onwards are maintained in this repository).*
 

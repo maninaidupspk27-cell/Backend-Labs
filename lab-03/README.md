@@ -13,10 +13,13 @@
 
 ## Live Link
 
-> If deployed on Vercel or Render, paste your active public URL here:
-> Example: `https://backend-labs.vercel.app/books/`
->
-> **Deployment Note:** This application is fully configured for deployment on **Vercel** (via [`vercel.json`](../vercel.json) and [`api/index.js`](../api/index.js)) as well as **Render** (via [`render.yaml`](../render.yaml)). All endpoint behaviors and validation checks are demonstrated via the REST client / Postman test suite and verified with the screenshots below.
+**[https://backend-labs-lab-03.onrender.com](https://backend-labs-lab-03.onrender.com)**
+
+Live API endpoints:
+- Welcome & Overview: [https://backend-labs-lab-03.onrender.com/](https://backend-labs-lab-03.onrender.com/)
+- All Books: [https://backend-labs-lab-03.onrender.com/books/](https://backend-labs-lab-03.onrender.com/books/)
+- Search & Filter Example: [https://backend-labs-lab-03.onrender.com/books/?search_q=the&min_price=300&max_price=450&order_by=price&order=DESC&limit=5&offset=0](https://backend-labs-lab-03.onrender.com/books/?search_q=the&min_price=300&max_price=450&order_by=price&order=DESC&limit=5&offset=0)
+- Single Book by ID: [https://backend-labs-lab-03.onrender.com/books/1/](https://backend-labs-lab-03.onrender.com/books/1/)
 
 ## Project Overview
 
