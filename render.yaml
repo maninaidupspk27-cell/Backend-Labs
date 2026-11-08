@@ -1,13 +1,5 @@
 services:
   - type: web
-    name: backend-labs-lab-02
-    runtime: node
-    plan: free
-    rootDir: lab-02
-    buildCommand: npm install && npm rebuild sqlite3 --build-from-source
-    startCommand: npm start
-
-  - type: web
     name: backend-labs-lab-03
     runtime: node
     plan: free

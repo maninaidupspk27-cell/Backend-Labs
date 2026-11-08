@@ -17,9 +17,9 @@
 
 | Lab Folder | Topic / Module | Status | Description |
 | --- | --- | --- | --- |
-| [`lab-01/`](./lab-01/) | Node.js and Express Server | Completed | HTTP routing, JSON/text responses, current time, 404 handler |
-| [`lab-02/`](./lab-02/) | SQLite Database and CRUD Routes | Completed | SQLite integration, CRUD operations on books table |
 | [`lab-03/`](./lab-03/) | REST API, Query Parameters, Validation, Debugging | Completed | Noun-based REST API, search (`search_q`), sorting (`order_by`, `order`), pagination (`limit`, `offset`), price-range filter (`min_price`, `max_price`), validation, status codes, and debugging |
+
+*(Note: Lab 1 and Lab 2 were completed in their respective standalone repositories. Labs from Lab 3 onwards are maintained in this repository).*
 
 ---
 
@@ -30,20 +30,6 @@ Backend-Labs/
 ├── .gitignore
 ├── README.md
 ├── render.yaml
-├── lab-01/
-│   ├── .gitignore
-│   ├── package.json
-│   ├── server.js
-│   ├── README.md
-│   └── Screenshots/
-├── lab-02/
-│   ├── .gitignore
-│   ├── package.json
-│   ├── app.js
-│   ├── app.http
-│   ├── goodreads.db
-│   ├── README.md
-│   └── Screenshots/
 └── lab-03/
     ├── .gitignore
     ├── package.json
