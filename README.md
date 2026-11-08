@@ -29,9 +29,14 @@
 Backend-Labs/
 ├── .gitignore
 ├── README.md
+├── package.json
+├── vercel.json
 ├── render.yaml
+├── api/
+│   └── index.js
 └── lab-03/
     ├── .gitignore
+    ├── vercel.json
     ├── package.json
     ├── app.js
     ├── app.http
@@ -40,6 +45,15 @@ Backend-Labs/
     ├── README.md
     └── Screenshots/
 ```
+
+## Deployment Options
+
+- **Vercel (Recommended):**
+  1. Go to [vercel.com/new](https://vercel.com/new) and import your `Backend-Labs` GitHub repository.
+  2. Keep all default settings (Framework: Other, Root Directory: `./`).
+  3. Click **Deploy**. Vercel will build and serve your API using the configured `api/index.js` and `vercel.json`.
+- **Render:**
+  Connect your GitHub repository to Render; it will automatically detect the blueprint in `render.yaml`.
 
 ## General Rules Followed
 

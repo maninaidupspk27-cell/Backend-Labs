@@ -1,13 +1,18 @@
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const sqlite3 = require("sqlite3");
 const { open } = require("sqlite");
 
 const app = express();
 app.use(express.json());
 
-const dbPath = path.join(__dirname, "goodreads.db");
+const isVercel = process.env.VERCEL === "1" || !!process.env.VERCEL;
+const originalDbPath = path.join(__dirname, "goodreads.db");
+const dbPath = isVercel ? path.join("/tmp", "goodreads.db") : originalDbPath;
+
 let db = null;
+let dbPromise = null;
 
 // ---------- Helpers ----------
 
@@ -43,62 +48,90 @@ const parseId = (value) => {
   return Number.isInteger(id) && id > 0 ? id : null;
 };
 
-// ---------- Initialize database and start server ----------
+// ---------- Database Initializer (Supports Local, Render, and Vercel Serverless) ----------
 
-const initializeDBAndServer = async () => {
-  try {
-    db = await open({
-      filename: dbPath,
-      driver: sqlite3.Database,
-    });
-
-    await db.exec(`
-      CREATE TABLE IF NOT EXISTS book (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT,
-        author TEXT,
-        price INTEGER,
-        pages INTEGER
-      );
-    `);
-
-    const books = await db.all("SELECT * FROM book;");
-
-    if (books.length === 0) {
-      await db.run(`
-        INSERT INTO book (title, author, price, pages)
-        VALUES
-          ('Harry Potter', 'J.K. Rowling', 500, 350),
-          ('The Hobbit', 'J.R.R. Tolkien', 400, 310),
-          ('Wings of Fire', 'A.P.J. Abdul Kalam', 250, 180),
-          ('The Alchemist', 'Paulo Coelho', 300, 200),
-          ('Atomic Habits', 'James Clear', 450, 320),
-          ('Rich Dad Poor Dad', 'Robert Kiyosaki', 350, 240),
-          ('Think and Grow Rich', 'Napoleon Hill', 280, 260),
-          ('Ikigai', 'Hector Garcia', 320, 190),
-          ('Deep Work', 'Cal Newport', 400, 280),
-          ('The Power of Habit', 'Charles Duhigg', 380, 290);
-      `);
-    }
-
-    const port = process.env.PORT || 3000;
-
-    // Express 5 passes startup errors (like EADDRINUSE) to this callback
-    app.listen(port, (error) => {
-      if (error) {
-        console.error("Server failed to start:", error.message);
-        process.exit(1);
+const getDB = async () => {
+  if (!dbPromise) {
+    dbPromise = (async () => {
+      // In Vercel serverless environments, the project folder is read-only.
+      // Copy the database to /tmp so SQLite write operations succeed.
+      if (isVercel && fs.existsSync(originalDbPath) && !fs.existsSync(dbPath)) {
+        try {
+          fs.copyFileSync(originalDbPath, dbPath);
+        } catch (copyErr) {
+          console.error("Warning: could not copy db to /tmp:", copyErr.message);
+        }
       }
-      console.log("Database initialized successfully!");
-      console.log(`Server running on port ${port}`);
-    });
-  } catch (error) {
-    console.error("Database or Server Error:", error.message);
-    process.exit(1);
+
+      const database = await open({
+        filename: dbPath,
+        driver: sqlite3.Database,
+      });
+
+      await database.exec(`
+        CREATE TABLE IF NOT EXISTS book (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT,
+          author TEXT,
+          price INTEGER,
+          pages INTEGER
+        );
+      `);
+
+      const books = await database.all("SELECT * FROM book;");
+
+      if (books.length === 0) {
+        await database.run(`
+          INSERT INTO book (title, author, price, pages)
+          VALUES
+            ('Harry Potter', 'J.K. Rowling', 500, 350),
+            ('The Hobbit', 'J.R.R. Tolkien', 400, 310),
+            ('Wings of Fire', 'A.P.J. Abdul Kalam', 250, 180),
+            ('The Alchemist', 'Paulo Coelho', 300, 200),
+            ('Atomic Habits', 'James Clear', 450, 320),
+            ('Rich Dad Poor Dad', 'Robert Kiyosaki', 350, 240),
+            ('Think and Grow Rich', 'Napoleon Hill', 280, 260),
+            ('Ikigai', 'Hector Garcia', 320, 190),
+            ('Deep Work', 'Cal Newport', 400, 280),
+            ('The Power of Habit', 'Charles Duhigg', 380, 290);
+        `);
+      }
+
+      db = database;
+      return database;
+    })();
   }
+  return dbPromise;
 };
 
+// Ensure database is ready before each request
+app.use(async (request, response, next) => {
+  try {
+    await getDB();
+    next();
+  } catch (error) {
+    response.status(500).json({ message: "Database connection failed: " + error.message });
+  }
+});
+
 // ---------- Routes ----------
+
+// Welcome root endpoint
+app.get("/", (request, response) => {
+  response.status(200).json({
+    message: "Welcome to Lab 3 Books REST API",
+    student: {
+      name: "Singamsetty Manikanta",
+      registrationNumber: "252U1R3087",
+      section: "CSE-DS(2B) 307",
+    },
+    endpoints: {
+      get_all_books: "/books/",
+      search_and_filter: "/books/?search_q=the&min_price=300&max_price=450&order_by=price&order=DESC&limit=5&offset=0",
+      get_book_by_id: "/books/1/",
+    },
+  });
+});
 
 // GET all books: search, filter, sort, paginate
 // Example: /books/?search_q=the&min_price=300&max_price=450&order_by=price&order=DESC&limit=5&offset=0
@@ -292,5 +325,25 @@ app.use((error, request, response, next) => {
   response.status(500).json({ message: error.message });
 });
 
-// ---------- Start ----------
-initializeDBAndServer();
+// ---------- Start Server Locally / on Render ----------
+if (!isVercel) {
+  const port = process.env.PORT || 3000;
+  getDB()
+    .then(() => {
+      app.listen(port, (error) => {
+        if (error) {
+          console.error("Server failed to start:", error.message);
+          process.exit(1);
+        }
+        console.log("Database initialized successfully!");
+        console.log(`Server running on port ${port}`);
+      });
+    })
+    .catch((error) => {
+      console.error("Database or Server Error:", error.message);
+      process.exit(1);
+    });
+}
+
+// Export for Vercel serverless deployment
+module.exports = app;

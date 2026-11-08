@@ -13,10 +13,10 @@
 
 ## Live Link
 
-> If deployed on Render/Railway, paste your active public URL here:
-> Example: `https://backend-labs-lab-03.onrender.com/books/`
+> If deployed on Vercel or Render, paste your active public URL here:
+> Example: `https://backend-labs.vercel.app/books/`
 >
-> **Deployment Note:** This application is configured for deployment via the root [`render.yaml`](../render.yaml) blueprint. If running locally or before deploying live, all endpoint behaviors and validation checks are demonstrated via the REST client / Postman test suite and verified with the screenshots below.
+> **Deployment Note:** This application is fully configured for deployment on **Vercel** (via [`vercel.json`](../vercel.json) and [`api/index.js`](../api/index.js)) as well as **Render** (via [`render.yaml`](../render.yaml)). All endpoint behaviors and validation checks are demonstrated via the REST client / Postman test suite and verified with the screenshots below.
 
 ## Project Overview
 
