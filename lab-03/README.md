@@ -7,16 +7,16 @@
 
 | Student detail | Value |
 | --- | --- |
-| Name | Shaik Asif Hussain |
-| Registration number | 252U1R9144 |
-| Section | S-26 |
+| Name | Singamsetty Manikanta |
+| Registration number | 252U1R3087 |
+| Section | CSE-DS(2B) 307 |
 
 ## Live Link
 
-**[ https://backend-labs-2-b8ce.onrender.com]( https://backend-labs-2-b8ce.onrender.com)**
-
-> Replace this with the real URL shown in your Render dashboard after deployment.
-> If the project cannot be deployed, write the reason here instead and rely on the Postman screenshots below.
+> If deployed on Render/Railway, paste your active public URL here:
+> Example: `https://backend-labs-lab-03.onrender.com/books/`
+>
+> **Deployment Note:** This application is configured for deployment via the root [`render.yaml`](../render.yaml) blueprint. If running locally or before deploying live, all endpoint behaviors and validation checks are demonstrated via the REST client / Postman test suite and verified with the screenshots below.
 
 ## Project Overview
 
@@ -41,7 +41,8 @@ lab-03/
 ├── goodreads.db
 ├── package.json
 ├── package-lock.json
-└── screenshots/
+├── postman_collection.json
+└── Screenshots/
 ```
 
 `node_modules/` is created by `npm install` and is excluded from Git.
@@ -152,7 +153,7 @@ All messages and errors use the same JSON shape:
 
 ## Test List (Postman / REST Client)
 
-All requests are also saved in [`app.http`](./app.http).
+All requests are saved in [`app.http`](./app.http) (for VS Code REST Client) and [`postman_collection.json`](./postman_collection.json) (importable directly into Postman).
 
 | # | Request | Expected result |
 | --- | --- | --- |

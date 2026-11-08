@@ -7,9 +7,9 @@
 
 | Student detail | Value |
 | --- | --- |
-| Name | Shaik Asif Hussain |
-| Registration number | 252U1R9144 |
-| Section | S-26 |
+| Name | Singamsetty Manikanta |
+| Registration number | 252U1R3087 |
+| Section | CSE-DS(2B) 307 |
 
 ## Project Overview
 
@@ -109,13 +109,13 @@ Render supplies the `PORT` environment variable at runtime. This project does no
 
 The source repository is:
 
-**[https://github.com/asifhussainsk53-prog/lab_report_1](https://github.com/asifhussainsk53-prog/lab_report_1)**
+**[https://github.com/maninaidupspk27-cell/Backend-Labs](https://github.com/maninaidupspk27-cell/Backend-Labs)**
 
 Clone it and install dependencies to work locally:
 
 ```bash
-git clone https://github.com/asifhussainsk53-prog/lab_report_1.git
-cd lab_report_1
+git clone https://github.com/maninaidupspk27-cell/Backend-Labs.git
+cd Backend-Labs/lab-01
 npm install
 ```
 

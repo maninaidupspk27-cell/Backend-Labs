@@ -13,9 +13,9 @@
 
 | Field | Details |
 | --- | --- |
-| Name | Shaik Asif Hussain |
-| Registration Number | 252U1R9144 |
-| Section | S-26 |
+| Name | Singamsetty Manikanta |
+| Registration Number | 252U1R3087 |
+| Section | CSE-DS(2B) 307 |
 
 ## Project Overview
 

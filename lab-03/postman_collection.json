@@ -1,0 +1,334 @@
+{
+  "info": {
+    "_postman_id": "b3e045a1-7c91-49b8-a621-0a69a92a54bf",
+    "name": "Lab 03 - Books REST API Test Collection",
+    "description": "Comprehensive test collection covering success and failure cases for Lab 3: REST API, query parameters, validation, and debugging.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Get all books (default limit 10)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books/",
+          "host": ["{{base_url}}"],
+          "path": ["books", ""]
+        }
+      }
+    },
+    {
+      "name": "2. Search by title",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books/?search_q=the",
+          "host": ["{{base_url}}"],
+          "path": ["books", ""],
+          "query": [
+            { "key": "search_q", "value": "the" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "3. Sort by price, highest first, 3 books",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books/?order_by=price&order=DESC&limit=3",
+          "host": ["{{base_url}}"],
+          "path": ["books", ""],
+          "query": [
+            { "key": "order_by", "value": "price" },
+            { "key": "order", "value": "DESC" },
+            { "key": "limit", "value": "3" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "4. Price range 300 to 400",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books/?min_price=300&max_price=400",
+          "host": ["{{base_url}}"],
+          "path": ["books", ""],
+          "query": [
+            { "key": "min_price", "value": "300" },
+            { "key": "max_price", "value": "400" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "5. Pagination: skip 2, take 2",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books/?limit=2&offset=2",
+          "host": ["{{base_url}}"],
+          "path": ["books", ""],
+          "query": [
+            { "key": "limit", "value": "2" },
+            { "key": "offset", "value": "2" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "6. Get one book",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books/4/",
+          "host": ["{{base_url}}"],
+          "path": ["books", "4", ""]
+        }
+      }
+    },
+    {
+      "name": "7. Add a book (expect 201)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Python Basics\",\n  \"author\": \"John\",\n  \"price\": 350,\n  \"pages\": 250\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/books/",
+          "host": ["{{base_url}}"],
+          "path": ["books", ""]
+        }
+      }
+    },
+    {
+      "name": "8. Update a book (expect 200)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Python Programming\",\n  \"author\": \"John\",\n  \"price\": 450,\n  \"pages\": 300\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/books/11/",
+          "host": ["{{base_url}}"],
+          "path": ["books", "11", ""]
+        }
+      }
+    },
+    {
+      "name": "9. Delete a book (expect 200)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books/11/",
+          "host": ["{{base_url}}"],
+          "path": ["books", "11", ""]
+        }
+      }
+    },
+    {
+      "name": "10. Book not found (expect 404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books/999/",
+          "host": ["{{base_url}}"],
+          "path": ["books", "999", ""]
+        }
+      }
+    },
+    {
+      "name": "11. Invalid id (expect 400)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books/abc/",
+          "host": ["{{base_url}}"],
+          "path": ["books", "abc", ""]
+        }
+      }
+    },
+    {
+      "name": "12. Invalid order_by (expect 400)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books/?order_by=password",
+          "host": ["{{base_url}}"],
+          "path": ["books", ""],
+          "query": [
+            { "key": "order_by", "value": "password" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "13. Invalid limit (expect 400)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books/?limit=abc",
+          "host": ["{{base_url}}"],
+          "path": ["books", ""],
+          "query": [
+            { "key": "limit", "value": "abc" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "14. min_price greater than max_price (expect 400)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books/?min_price=500&max_price=100",
+          "host": ["{{base_url}}"],
+          "path": ["books", ""],
+          "query": [
+            { "key": "min_price", "value": "500" },
+            { "key": "max_price", "value": "100" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "15. POST missing title (expect 400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"author\": \"John\",\n  \"price\": 350\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/books/",
+          "host": ["{{base_url}}"],
+          "path": ["books", ""]
+        }
+      }
+    },
+    {
+      "name": "16. POST non-numeric price (expect 400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Bad Price\",\n  \"author\": \"John\",\n  \"price\": \"abc\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/books/",
+          "host": ["{{base_url}}"],
+          "path": ["books", ""]
+        }
+      }
+    },
+    {
+      "name": "17. POST broken JSON (expect 400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\ninvalid json"
+        },
+        "url": {
+          "raw": "{{base_url}}/books/",
+          "host": ["{{base_url}}"],
+          "path": ["books", ""]
+        }
+      }
+    },
+    {
+      "name": "18. PUT book that does not exist (expect 404)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Non existent\",\n  \"author\": \"Nobody\",\n  \"price\": 100\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/books/999/",
+          "host": ["{{base_url}}"],
+          "path": ["books", "999", ""]
+        }
+      }
+    },
+    {
+      "name": "19. DELETE book that does not exist (expect 404)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books/999/",
+          "host": ["{{base_url}}"],
+          "path": ["books", "999", ""]
+        }
+      }
+    },
+    {
+      "name": "20. Unknown route (expect 404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/nothing",
+          "host": ["{{base_url}}"],
+          "path": ["nothing"]
+        }
+      }
+    },
+    {
+      "name": "21. SQL injection attempt (expect 200 with [], table survives)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books/?search_q=%27%3BDROP%20TABLE%20book%3B--",
+          "host": ["{{base_url}}"],
+          "path": ["books", ""],
+          "query": [
+            { "key": "search_q", "value": "';DROP TABLE book;--" }
+          ]
+        }
+      }
+    }
+  ]
+}
