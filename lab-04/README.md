@@ -239,9 +239,6 @@ Summary: 11 passed, 0 failed
 
 ## Screenshots
 
-> **Note:** Add your Postman screenshots to the `screenshots/` folder and uncomment the lines below.
-
-<!-- 
 ### Register — Success (200)
 ![Register success](screenshots/register-success.png)
 
@@ -271,7 +268,6 @@ Summary: 11 passed, 0 failed
 
 ### JWT Decoded at jwt.io
 ![JWT decoded at jwt.io](screenshots/jwt-decoded.png)
--->
 
 ## Viva Questions and Answers
 
