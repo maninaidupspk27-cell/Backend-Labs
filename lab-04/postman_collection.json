@@ -1,0 +1,209 @@
+{
+  "info": {
+    "_postman_id": "lab-04-auth-jwt-singamsetty",
+    "name": "Lab 04 - Registration, Login and JWT",
+    "description": "Postman test suite for Lab 4 Authentication and User Management (Singamsetty Manikanta - 252U1R3087)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - Welcome Overview",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/",
+          "host": ["{{base_url}}"],
+          "path": [""]
+        }
+      }
+    },
+    {
+      "name": "02 - Register User (Success)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"manikanta\",\n  \"name\": \"Singamsetty Manikanta\",\n  \"password\": \"mani@secure2026\",\n  \"gender\": \"Male\",\n  \"location\": \"Hyderabad\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/register/",
+          "host": ["{{base_url}}"],
+          "path": ["register", ""]
+        }
+      }
+    },
+    {
+      "name": "03 - Register User (Failure - Duplicate User)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"manikanta\",\n  \"name\": \"Singamsetty Manikanta\",\n  \"password\": \"duplicate_pass\",\n  \"gender\": \"Male\",\n  \"location\": \"Hyderabad\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/register/",
+          "host": ["{{base_url}}"],
+          "path": ["register", ""]
+        }
+      }
+    },
+    {
+      "name": "04 - Register User (Failure - Password Too Short)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"newuser123\",\n  \"name\": \"New User\",\n  \"password\": \"123\",\n  \"gender\": \"Male\",\n  \"location\": \"Bengaluru\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/register/",
+          "host": ["{{base_url}}"],
+          "path": ["register", ""]
+        }
+      }
+    },
+    {
+      "name": "05 - Login (Success - Returns jwt_token)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "if (jsonData.jwt_token) {",
+              "    pm.environment.set(\"jwt_token\", jsonData.jwt_token);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"manikanta\",\n  \"password\": \"mani@secure2026\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/login/",
+          "host": ["{{base_url}}"],
+          "path": ["login", ""]
+        }
+      }
+    },
+    {
+      "name": "06 - Login (Failure - Unknown User)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"ghost_user_999\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/login/",
+          "host": ["{{base_url}}"],
+          "path": ["login", ""]
+        }
+      }
+    },
+    {
+      "name": "07 - Login (Failure - Wrong Password)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"manikanta\",\n  \"password\": \"incorrect_pass_123\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/login/",
+          "host": ["{{base_url}}"],
+          "path": ["login", ""]
+        }
+      }
+    },
+    {
+      "name": "08 - View Users (Database Stores Password Hashes Only)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/users/",
+          "host": ["{{base_url}}"],
+          "path": ["users", ""]
+        }
+      }
+    },
+    {
+      "name": "09 - Protected Profile (Success with JWT)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/profile/",
+          "host": ["{{base_url}}"],
+          "path": ["profile", ""]
+        }
+      }
+    },
+    {
+      "name": "10 - Protected Profile (Failure - No Token)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/profile/",
+          "host": ["{{base_url}}"],
+          "path": ["profile", ""]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000"
+    }
+  ]
+}
