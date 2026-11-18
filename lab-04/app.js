@@ -130,7 +130,7 @@ app.get("/", (request, response) => {
   response.status(200).json({
     lab: "Lab 4: Registration, login and JWT",
     course: "Backend Development Fundamentals - Year II Term II",
-    faculty: "Joel Prashanth D",
+    faculty: "Mr Yugandhar Gurjalwar",
     student: {
       name: "Singamsetty Manikanta",
       registrationNumber: "252U1R3087",
