@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: backend-labs-lab-04
+    env: node
+    region: singapore
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: JWT_SECRET
+        value: AURORA_BACKEND_LABS_SECRET_KEY_2026
+    autoDeploy: true
