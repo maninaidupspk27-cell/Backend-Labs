@@ -3,7 +3,7 @@
 **Course:** Backend Development Fundamentals  
 **Year/Term:** Year II, Term II  
 **University:** Aurora Deemed to be University  
-**Faculty:** Mr. Joel Prashanth D  
+**Faculty:** Mr Yugandhar Gurjalwar  
 
 | Student Detail | Value |
 | --- | --- |
